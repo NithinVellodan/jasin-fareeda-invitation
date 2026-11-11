@@ -16,9 +16,14 @@ function when(iso) {
 
 function meta(variant) {
   const couple = `${config.groom.name} & ${config.bride.name}`;
-  const title = `${couple} · Nikah Ceremony & Reception · 28 & 29 Nov 2026`;
-  const description = `You're cordially invited to the Nikah ceremony (Saturday 28 Nov 11:30 AM, Puduppady) and Wedding Reception (Sunday 29 Nov 3:30 PM, Ollur) of ${couple}`;
+  const main = variant === 'reception' ? config.reception : config.nikah;
+  const w = when(main.start);
+  const title = `${couple} · ${main.title} · ${w.short}`;
+  const where = placeholder(main.venue) ? '' : `, ${main.venue}`;
+  const what = variant === 'reception' ? 'wedding reception' : 'Nikah';
+  const description = `You're invited to the ${what} of ${couple} — ${w.long}${where}`;
   const url = config.siteUrl ? config.siteUrl.replace(/\/$/, '') + (variant === 'reception' ? '/reception' : '') : '';
+  const imageUrl = config.siteUrl ? config.siteUrl.replace(/\/$/, '') + '/images/preview.png' : '/images/preview.png';
   const tags = [
     `<title>${esc(title)}</title>`,
     `<meta name="description" content="${esc(description)}" />`,
@@ -26,20 +31,24 @@ function meta(variant) {
     `<meta property="og:site_name" content="${esc(couple)}" />`,
     `<meta property="og:title" content="${esc(title)}" />`,
     `<meta property="og:description" content="${esc(description)}" />`,
-    `<meta name="twitter:card" content="summary" />`,
+    `<meta property="og:image" content="${esc(imageUrl)}" />`,
+    `<meta property="og:image:width" content="1200" />`,
+    `<meta property="og:image:height" content="630" />`,
+    `<meta name="twitter:card" content="summary_large_image" />`,
     `<meta name="twitter:title" content="${esc(title)}" />`,
     `<meta name="twitter:description" content="${esc(description)}" />`,
+    `<meta name="twitter:image" content="${esc(imageUrl)}" />`,
   ];
   if (url) tags.push(`<meta property="og:url" content="${esc(url)}" />`, `<link rel="canonical" href="${esc(url)}" />`);
   return tags.join('\n    ');
 }
 
 function noscript(variant) {
-  const lines = [config.nikah, config.reception].map((e) => {
+  const lines = (variant === 'reception' ? [config.reception] : [config.nikah, config.reception]).map((e) => {
     const w = when(e.start);
     return `${esc(e.title)}: ${esc(w.long)}, ${esc(e.timeText || w.time)}${placeholder(e.venue) ? '' : ` at ${esc(e.venue)}`}`;
   });
-  return `<noscript><div class="noscript"><p>${esc(config.groom.name)} &amp; ${esc(config.bride.name)}<br />${lines.join('<br />')}</p></div></noscript>`;
+  return `<noscript><div class="noscript"><p>${esc(config.bride.name)} &amp; ${esc(config.groom.name)}<br />${lines.join('<br />')}</p></div></noscript>`;
 }
 
 const loader = `<div id="loader" role="status" aria-label="Loading the invitation">
@@ -71,13 +80,16 @@ function invitationHtml() {
     configurePreviewServer: (server) => void server.middlewares.use(rewrite),
     transformIndexHtml(html, ctx) {
       const variant = /reception[\\/]index\.html$/.test(ctx.filename) ? 'reception' : 'full';
-      return html.replace('<!--meta-->', meta(variant)).replace('<!--loader-->', loader).replace('<!--noscript-->', noscript(variant));
+      const analytics = `<script defer src="/_vercel/insights/script.js"></script>`;
+      return html
+        .replace('<!--meta-->', meta(variant) + '\n    ' + analytics)
+        .replace('<!--loader-->', loader)
+        .replace('<!--noscript-->', noscript(variant));
     },
   };
 }
 
 export default defineConfig({
-  base: process.env.GITHUB_ACTIONS ? '/jasin-fareedha-invitation/' : '/',
   appType: 'mpa',
   plugins: [invitationHtml()],
   build: {

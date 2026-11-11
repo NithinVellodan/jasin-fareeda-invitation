@@ -32,7 +32,7 @@
 .loader-mono .mg {
   fill: url(#g-lfoil);
   fill-opacity: 0;
-  stroke: #a8843f;
+  stroke: #b07468;
   stroke-width: 0.6;
   stroke-linejoin: round;
   stroke-dasharray: var(--len);
@@ -69,14 +69,14 @@
 .loader-line {
   width: min(34vw, 150px);
   height: 1px;
-  background: rgba(168, 132, 63, 0.22);
+  background: rgba(176, 116, 104, 0.22);
   overflow: hidden;
 }
 
 .loader-line span {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, rgba(20, 68, 49, 0.3), #144431 60%, #c9a55e);
+  background: linear-gradient(90deg, rgba(176, 116, 104, 0.3), #b07468 60%, #c9a55e);
   transform: scaleX(0.04);
   transform-origin: 0 50%;
   transition: transform 0.6s cubic-bezier(0.22, 0.8, 0.24, 1);

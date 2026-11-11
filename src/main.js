@@ -13,15 +13,15 @@ import { fitArch, pageList, revealPage, setupPages } from './pages/pages.js';
 
 const variant =
   document.documentElement.dataset.variant === 'reception' || /^\/reception\/?$/.test(window.location.pathname) ? 'reception' : 'full';
-const replayed = sessionStorage.getItem('sb-replay') === '1';
-sessionStorage.removeItem('sb-replay');
+const replayed = sessionStorage.getItem('rr-replay') === '1';
+sessionStorage.removeItem('rr-replay');
 if (replayed) $('#loader')?.classList.add('quick');
 
 document.documentElement.style.setProperty('--pattern', PATTERN_URL);
 document.body.insertAdjacentHTML('afterbegin', DEFS);
 
 const pages = pageList(variant);
-const couple = `${config.groom.name} and ${config.bride.name}`;
+const couple = `${config.bride.name} and ${config.groom.name}`;
 document.body.appendChild(
   el(`<div id="app">
   <div id="backdrop" aria-hidden="true"></div>
@@ -73,7 +73,7 @@ musicBtn.addEventListener('click', () => {
 
 function replay() {
   play($('#fade'), [{ opacity: 0 }, { opacity: 1 }], { duration: 850, easing: E.inOutSoft }).finished.then(() => {
-    sessionStorage.setItem('sb-replay', '1');
+    sessionStorage.setItem('rr-replay', '1');
     window.location.reload();
   });
 }

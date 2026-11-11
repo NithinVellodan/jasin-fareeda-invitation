@@ -11,33 +11,41 @@ const INV = config.invitation;
 const bride = esc(config.bride.name);
 const groom = esc(config.groom.name);
 
+// Splits a multi-line config string (uses \n) into HTML lines, each part HTML-escaped.
+const lines = (s) => (s || '').split('\n').map(esc).join('<br>');
+
 const bg = () => '<div class="sheet-bg" aria-hidden="true"></div><div class="bg-sparkles" aria-hidden="true"></div>';
 const orn = (cls = '') => `<div class="orn ${cls}" data-r>${divider}</div>`;
 
-function namesPage() {
-  const C = config.contact || {};
+function namesPage(variant) {
+  const isReception = variant === 'reception';
+  // Reception card shows groom first, Nikkah card shows bride first
+  const intro = isReception && INV.blessingsIntroReception ? INV.blessingsIntroReception : INV.blessingsIntro;
+  const firstName = isReception ? groom : bride;
+  const firstDetails = isReception ? (INV.groomParentsReception || INV.groomParents) : INV.brideDetails;
+  const firstDetailsClass = isReception ? 'groom-parents' : 'bride-parents';
+  const secondName = isReception ? bride : groom;
+  const secondDetails = isReception ? (INV.brideDetailsReception || INV.brideDetails) : INV.groomParents;
+  const secondDetailsClass = isReception ? 'bride-parents' : 'groom-parents';
+  const joiner = isReception && INV.joinerReception ? INV.joinerReception : INV.joiner;
   return `
   <div class="sheet sheet--names">
     ${bg()}
-    ${C.phone ? `<div class="top-contact" data-r>
-      <span class="tc-loc">${icon.pin} Puduppady · Ollur</span>
-      <a class="tc-phone" href="tel:${esc(C.phoneRaw || C.phone)}">${icon.phone} ${esc(C.phone)}</a>
-    </div>` : ''}
     <div class="names-arch">
       ${arch}
       <div class="arch-content">
-        <p class="bismillah" lang="ar" dir="rtl" data-r>&#xFDFD;</p>
+        <p class="bismillah" lang="ar" dir="rtl" data-r>${INV.ayah ? esc(INV.ayah) : '&#xFDFD;'}</p>
         <p class="meaning" data-r>${esc(INV.bismillahMeaning)}</p>
         ${orn('orn--sm')}
-        <p class="hosts-line" data-r>${esc(INV.hostsLine)}</p>
-        <h1 class="name" data-w><span class="shimmer">${groom}</span></h1>
-        <p class="parent-detail" data-r><span class="rel">S/O</span> <strong>${esc(config.groom.parents)}</strong><br/><span class="res">${esc(config.groom.residence)}</span></p>
-        <p class="joiner" data-r><span>${esc(INV.joiner)}</span></p>
-        <h2 class="name" data-w><span class="shimmer">${bride}</span></h2>
-        <p class="parent-detail" data-r><span class="rel">D/O</span> <strong>${esc(config.bride.parents)}</strong><br/><span class="res">${esc(config.bride.residence)}</span></p>
-        ${orn('orn--xs')}
-        <p class="insha-script" data-r>${esc(INV.inshaAllah)}</p>
-        <p class="presence-note" data-r>${esc(INV.presenceText)}</p>
+        ${intro ? `<p class="blessings-intro" data-r>${esc(intro)}</p>` : ''}
+        ${INV.blessings ? `<p class="blessings" data-r>${esc(INV.blessings)}</p>` : ''}
+        ${INV.hosts || INV.hostsLine ? `${orn('orn--sm')}${INV.hosts ? `<p class="hosts" data-r>${esc(INV.hosts)}</p>` : ''}${INV.hostsLine ? `<p class="hosts-line" data-r>${esc(INV.hostsLine)}</p>` : ''}` : ''}
+        <h1 class="name" data-w><span class="shimmer">${firstName}</span></h1>
+        ${firstDetails ? `<p class="${firstDetailsClass}" data-r>${lines(firstDetails)}</p>` : ''}
+        <p class="joiner" data-r><span>${esc(joiner)}</span></p>
+        <p class="name" data-w><span class="shimmer">${secondName}</span></p>
+        ${orn('orn--sm')}
+        <p class="${secondDetailsClass}" data-r>${lines(secondDetails)}</p>
       </div>
     </div>
     <p class="swipe-hint" data-r aria-hidden="true">
@@ -48,8 +56,7 @@ function namesPage() {
 }
 
 function datePage(event) {
-  const p1 = dateParts(config.nikah.start);
-  const p2 = dateParts(config.reception.start);
+  const p = dateParts(event.start);
   return `
   <div class="sheet sheet--date">
     ${bg()}
@@ -63,19 +70,11 @@ function datePage(event) {
       ${orn()}
       <button class="date-card" type="button" data-r aria-label="${esc(T.revealTitle)}">
         <span class="date-face">
-          <span class="d-events-dual">
-            <span class="d-event-row">
-              <span class="d-cal-badge">Nikah Ceremony</span>
-              <strong>Saturday, 28 Nov 2026</strong>
-              <em>11:30 AM · ST GEORGE Programme Hall</em>
-            </span>
-            <span class="orn orn--xs">${divider}</span>
-            <span class="d-event-row">
-              <span class="d-cal-badge">Wedding Reception</span>
-              <strong>Sunday, 29 Nov 2026</strong>
-              <em>3:30 PM Onwards · Jas Villa, Ollur, Calicut</em>
-            </span>
-          </span>
+          <span class="d-cal">${icon.calendar}</span>
+          <span class="d-weekday">${esc(p.weekday)},</span>
+          <span class="d-date">${dateLineHtml(p)}</span>
+          <span class="orn orn--xs">${divider}</span>
+          <span class="d-insha">${esc(T.inshallah)}</span>
         </span>
         <span class="veil" aria-hidden="true">
           <span class="veil-shimmer"></span>
@@ -96,38 +95,35 @@ function datePage(event) {
 function eventPage(event, kind) {
   const p = dateParts(event.start);
   const url = mapsUrl(event);
+  const reception = kind === 'reception';
   return `
   <div class="sheet sheet--event sheet--${kind}">
     ${bg()}
+    ${reception ? `<div class="bokeh" aria-hidden="true"></div><div class="lanterns" aria-hidden="true">${lantern('l1')}${lantern('l2')}${lantern('l3')}</div>` : ''}
     <div class="stack stack--event">
-      <button class="rings-btn" type="button" data-r aria-label="Tap the rings">${rings}<span class="rings-pulse" aria-hidden="true"></span></button>
+      ${reception ? '' : `<button class="rings-btn" type="button" data-r aria-label="Tap the rings">${rings}<span class="rings-pulse" aria-hidden="true"></span></button>`}
       ${event.eyebrow ? `<p class="eyebrow" data-r>${esc(event.eyebrow)}</p>` : ''}
       <h2 class="script-title script-title--xl" data-w><span class="foil-rose">${esc(event.title)}</span></h2>
       ${event.subtitle ? `<p class="event-sub" data-r>${esc(event.subtitle)}</p>` : ''}
       ${orn()}
       <ul class="details">
-        <li data-r>${icon.calendar}<span class="det"><em>${esc(event.dayText)}</em><strong>${dateLineHtml(p)}</strong></span></li>
+        <li data-r>${icon.calendar}<span class="det"><em>${esc(event.dayText)}</em><strong>${dateLineHtml(p)}</strong>${event.hijri ? `<em>${esc(event.hijri)}</em>` : ''}</span></li>
         <li data-r>${icon.clock}<span class="det"><em>${esc(event.timeText)}</em></span></li>
         <li data-r>${icon.pin}<span class="det"><strong>${esc(event.venuePrefix)} ${esc(event.venue)}</strong>${[].concat(event.address).map((a) => `<span>${esc(a)}</span>`).join('')}</span></li>
       </ul>
-      <div class="location-qr-card" data-r>
-        <div class="qr-box">
-          <img src="${esc(event.qrImage || '/images/qr-reception.png')}" alt="Scan for Location QR" class="qr-img" width="88" height="88" />
-        </div>
-        ${url ? `
-          <div class="map-actions">
-            <a class="map-btn map-btn--location" href="${esc(url)}" target="_blank" rel="noopener" aria-label="Open ${esc(event.venue)} in Google Maps">
-              ${icon.pin}<span>Scan for Location</span>
-            </a>
-            <span class="map-sublink">Open in Google Maps</span>
-          </div>` : ''}
-      </div>
-      ${event.regards ? `<p class="event-regards" data-r><small>Cordially inviting: ${esc(event.regards)}</small></p>` : ''}
+      ${orn()}
+      ${url ? `<a class="map-btn" data-r href="${esc(url)}" target="_blank" rel="noopener" aria-label="Open the ${esc(event.title)} venue in Google Maps">${icon.pin}<span>Open in Maps</span></a>` : ''}
     </div>
   </div>`;
 }
 
-function closingPage() {
+function closingPage(variant) {
+  const isReception = variant === 'reception';
+  const familiesRaw = variant === 'reception' && config.familiesReception
+    ? config.familiesReception
+    : config.families;
+  const closingText = isReception && config.text.closingReception ? config.text.closingReception : T.closing;
+  const complimentsText = isReception && config.text.complimentsReception ? config.text.complimentsReception : T.compliments;
   return `
   <div class="sheet sheet--closing">
     ${bg()}
@@ -136,18 +132,12 @@ function closingPage() {
       <div class="closing-mono" data-r>${monogram('mono-gold')}</div>
       <p class="eyebrow" data-r>${esc(T.closingKicker)}</p>
       ${orn()}
-      <p class="closing-text" data-r>${esc(T.closing)}</p>
+      <p class="closing-text" data-r>${esc(closingText)}</p>
       ${orn()}
-      <div class="closing-families-block" data-r>
-        <p class="compliments">${esc(T.compliments)}</p>
-        <p class="fam-line"><strong>Nikah:</strong> ${esc(config.nikah.regards)}</p>
-        <p class="fam-line"><strong>Reception:</strong> ${esc(config.reception.regards)}</p>
-      </div>
-      <p class="closing-family" data-w>Jasin &amp; Fareeda</p>
-      ${orn('orn--xs')}
-      <div class="closing-buttons" data-r>
-        <button class="replay" type="button">${icon.replay}<span>Watch again</span></button>
-      </div>
+      <p class="compliments" data-r>${esc(complimentsText)}</p>
+      ${orn()}
+      <p class="closing-family" data-w>${lines(familiesRaw)}</p>
+      <button class="replay" type="button" data-r>${icon.replay}<span>Watch again</span></button>
     </div>
   </div>`;
 }
@@ -222,21 +212,14 @@ export function fitArch(root) {
 }
 
 export function pageList(variant) {
-  if (variant === 'reception') {
-    return [
-      { id: 'names', label: 'Invitation', html: namesPage() },
-      { id: 'date', label: 'Save the date', html: datePage(config.reception) },
-      { id: 'reception', label: 'Reception', html: eventPage(config.reception, 'reception') },
-      { id: 'closing', label: 'Best Regards', html: closingPage() },
-    ];
-  }
-  return [
-    { id: 'names', label: 'Invitation', html: namesPage() },
-    { id: 'date', label: 'Save the date', html: datePage(config.nikah) },
-    { id: 'nikah', label: 'Nikah', html: eventPage(config.nikah, 'nikah') },
-    { id: 'reception', label: 'Reception', html: eventPage(config.reception, 'reception') },
-    { id: 'closing', label: 'Best Regards', html: closingPage() },
+  const pages = [
+    { id: 'names', label: 'Invitation', html: namesPage(variant) },
+    { id: 'date', label: 'Save the date', html: datePage(variant === 'reception' ? config.reception : config.nikah) },
   ];
+  if (variant !== 'reception') pages.push({ id: 'nikah', label: 'Nikah', html: eventPage(config.nikah, 'nikah') });
+  pages.push({ id: 'reception', label: 'Reception', html: eventPage(config.reception, 'reception') });
+  pages.push({ id: 'closing', label: 'With love', html: closingPage(variant) });
+  return pages;
 }
 
 const WRITE = { duration: 1600, easing: 'cubic-bezier(.45,.05,.25,1)' };

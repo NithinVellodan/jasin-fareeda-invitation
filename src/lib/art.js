@@ -23,11 +23,11 @@ export const DEFS = `
     <linearGradient id="g-foil-h" x1="0" y1="0" x2="1" y2="0">${GOLD_STOPS}</linearGradient>
     <linearGradient id="g-rose" x1="0" y1="0" x2="1" y2="1">${ROSE_STOPS}</linearGradient>
     <radialGradient id="g-gwax" cx=".36" cy=".3" r=".82">
-      <stop offset="0" stop-color="#2D6A4F"/><stop offset=".42" stop-color="#1B4D3E"/>
-      <stop offset=".8" stop-color="#143D2B"/><stop offset="1" stop-color="#081C15"/>
+      <stop offset="0" stop-color="#ECD3CA"/><stop offset=".42" stop-color="#C99B91"/>
+      <stop offset=".8" stop-color="#A06C63"/><stop offset="1" stop-color="#77473F"/>
     </radialGradient>
     <radialGradient id="g-gwax-disc" cx=".42" cy=".36" r=".72">
-      <stop offset="0" stop-color="#245A42"/><stop offset="1" stop-color="#113827"/>
+      <stop offset="0" stop-color="#D3A79E"/><stop offset="1" stop-color="#A5736A"/>
     </radialGradient>
     <radialGradient id="g-petal" gradientUnits="userSpaceOnUse" cx="0" cy="0" r="46">
       <stop offset=".08" stop-color="#EDC6BC"/><stop offset=".45" stop-color="#F8E6E0"/><stop offset="1" stop-color="#FFFDF9"/>
@@ -70,15 +70,15 @@ export function gateSealSVG() {
   const h = M.height * s;
   const mono = (attrs) => `<path d="${M.first}" ${attrs}/><path d="${M.second}" ${attrs}/>`;
   return `<svg class="gseal-svg" viewBox="-104 -104 208 208" aria-hidden="true" focusable="false">
-    <path d="${WAX}" fill="#081c15" opacity=".36" transform="translate(4 8)" filter="url(#f-wax-shadow)"/>
+    <path d="${WAX}" fill="#3d211c" opacity=".36" transform="translate(4 8)" filter="url(#f-wax-shadow)"/>
     <path d="${WAX}" fill="url(#g-gwax)"/>
-    <path d="${WAX}" fill="none" stroke="#143d2b" stroke-opacity=".5" stroke-width="1.4"/>
+    <path d="${WAX}" fill="none" stroke="#6d4740" stroke-opacity=".5" stroke-width="1.4"/>
     <circle r="66" fill="url(#g-gwax-disc)"/>
-    <circle r="66" fill="none" stroke="#0e2f21" stroke-opacity=".45" stroke-width="2.4"/>
-    <circle r="68" fill="none" stroke="#d5f0e3" stroke-opacity=".4" stroke-width="1.1"/>
+    <circle r="66" fill="none" stroke="#6b443d" stroke-opacity=".45" stroke-width="2.4"/>
+    <circle r="68" fill="none" stroke="#F8E6E0" stroke-opacity=".55" stroke-width="1.1"/>
     <circle r="59" fill="none" stroke="url(#g-foil)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray=".01 5.149"/>
     <g class="seal-mono" transform="translate(${(-w / 2).toFixed(2)} ${(-h / 2 + 2).toFixed(2)}) scale(${s.toFixed(4)})">
-      <g transform="translate(1.4 2.2)">${mono('fill="#081c15" stroke="#081c15" stroke-width="2.2" opacity=".5"')}</g>
+      <g transform="translate(1.4 2.2)">${mono('fill="#4a2621" stroke="#4a2621" stroke-width="2.2" opacity=".5"')}</g>
       ${mono('fill="url(#g-foil)" stroke="url(#g-foil)" stroke-width="2.2" stroke-linejoin="round"')}
     </g>
     <ellipse cx="-30" cy="-50" rx="40" ry="14" fill="#fff" opacity=".2" transform="rotate(-30 -30 -50)"/>
@@ -159,9 +159,6 @@ export const rings = `<svg class="rings" viewBox="0 0 120 86" aria-hidden="true"
 
 export const icon = {
   pin: '<svg class="i-pin" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 21.5s-6.6-5.7-6.6-11.2a6.6 6.6 0 1 1 13.2 0c0 5.5-6.6 11.2-6.6 11.2z"/><circle cx="12" cy="10.2" r="2.5"/></svg>',
-  phone:
-    '<svg class="i-phone" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.4 0 .8-.2 1l-2.3 2.2z" fill="currentColor"/></svg>',
-  card: '<svg class="i-card" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2.5"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="7" y1="14" x2="17" y2="14"/></svg>',
   calendar:
     '<svg class="i-cal" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="5" width="17" height="15.5" rx="2.2"/><path d="M3.5 9.6h17M8 3v4M16 3v4"/><path d="M8 13.4h.01M12 13.4h.01M16 13.4h.01M8 16.8h.01M12 16.8h.01" stroke-width="2.2"/></svg>',
   clock:

@@ -1,4 +1,4 @@
-// Generates src/lib/monogram-data.js: the joined "S" + "B" monogram as SVG outlines
+// Generates src/lib/monogram-data.js: the joined "J" + "F" monogram as SVG outlines
 // (Great Vibes, OFL - the same script as the names), so the seal/loader never depend on web-font loading.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';

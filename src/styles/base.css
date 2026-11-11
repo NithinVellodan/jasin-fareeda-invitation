@@ -1,28 +1,25 @@
-/* Design tokens: warm ivory parchment, emerald green & espresso ink, gold accents & foil, ivory roses */
+/* Design tokens: warm ivory + linen, espresso ink, gold and rose-gold foil, blush petals. No green. */
 :root {
   --mist-1: #fffcf8;
   --mist-2: #f4ebe3;
   --mist-3: #e7d6ca;
   --paper: #fcf8f1;
   --linen: #ede5dc;
-  --ink: #223026;
-  --ink-soft: #3e4e43;
-  --ink-mute: #5d6f63;
+  --ink: #3b2925;
+  --ink-soft: #5a433d;
+  --ink-mute: #77605a;
   --gold-deep: #7a5b23;
   --gold: #a8843f;
   --gold-mid: #c9a55e;
   --gold-light: #e6cf96;
-  --rose-deep: #144431;
-  --rose: #1c5c43;
-  --rose-mid: #2b7a59;
-  --rose-light: #52a37e;
-  --name: #144431;
-  --emerald-deep: #0c2d20;
-  --emerald-mid: #18523b;
-  --emerald-light: #257052;
+  --rose-deep: #7b3f39;
+  --rose: #b07468;
+  --rose-mid: #cf9a8f;
+  --rose-light: #ebc7bd;
+  --name: #6e3a35;
   --line: rgba(168, 132, 63, 0.55);
   --foil: linear-gradient(100deg, #8c6a2f 0%, #c9a55e 20%, #f4e4b2 38%, #c49a4e 55%, #9c7834 74%, #ddbe78 100%);
-  --foil-rose: linear-gradient(100deg, #0e3525 0%, #17533b 22%, #c9a55e 40%, #17533b 56%, #0a291c 76%, #c9a55e 100%);
+  --foil-rose: linear-gradient(100deg, #7a3f39 0%, #b06c61 22%, #e7b4a5 40%, #b9786c 56%, #84453e 76%, #c48b7d 100%);
 
   --serif: 'Cormorant Garamond', 'Cormorant', Georgia, 'Times New Roman', serif;
   --caps: 'Cinzel', 'Cormorant Garamond', Georgia, serif;
