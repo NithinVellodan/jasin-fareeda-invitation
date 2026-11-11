@@ -56,7 +56,7 @@ export const config = {
   },
 
   // Closing page sign-off — Nikkah invitation
-  families: 'Fathima Noureen,\nAjmal Hakeem',
+  families: ' Salman,Jasna Hassan, \n Fathima Noureen,\nAjmal Hakeem, & Relatives',
   // Closing page sign-off — Reception invitation
   familiesReception: 'Salman,\nJasna Hassan and Relatives',
 
