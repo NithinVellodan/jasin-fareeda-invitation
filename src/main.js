@@ -1,4 +1,5 @@
 import { config } from './config.js';
+import { inject } from '@vercel/analytics';
 import { DEFS, PATTERN_URL, icon } from './lib/art.js';
 import { $, $$, el, esc } from './lib/dom.js';
 import { E, finished, play, reducedMotion as reduced, wait } from './lib/anim.js';
@@ -10,6 +11,8 @@ import { createFlowers } from './scenes/flowers.js';
 import { createGate } from './scenes/gate.js';
 import { createDeck } from './deck/deck.js';
 import { fitArch, pageList, revealPage, setupPages } from './pages/pages.js';
+
+inject();
 
 const variant =
   document.documentElement.dataset.variant === 'reception' || /^\/reception\/?$/.test(window.location.pathname) ? 'reception' : 'full';
