@@ -38,7 +38,7 @@ export const config = {
     venue: 'ST GEORGE Programme Hall',
     address: ['Puduppady'],
     // Paste the exact Google Maps share link in `url` (or fill lat/lng) to pin the venue precisely.
-    map: { url: '', lat: null, lng: null, query: 'ST GEORGE Programme Hall, Puduppady' },
+    map: { url: 'https://maps.app.goo.gl/B14D8S6SDYSCyCxK6?g_st=iw', lat: null, lng: null, query: 'ST GEORGE Programme Hall, Puduppady' },
   },
 
   reception: {
@@ -52,7 +52,7 @@ export const config = {
     venuePrefix: 'At',
     venue: 'Jas Villa',
     address: ['Ollur'],
-    map: { url: '', lat: null, lng: null, query: 'Jas Villa, Ollur' },
+    map: { url: 'https://maps.app.goo.gl/brkpfbXBxuCLhhFf7?g_st=iw', lat: null, lng: null, query: 'Jas Villa, Ollur' },
   },
 
   // Closing page sign-off — Nikkah invitation
