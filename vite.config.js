@@ -23,7 +23,8 @@ function meta(variant) {
   const what = variant === 'reception' ? 'wedding reception' : 'Nikah';
   const description = `You're invited to the ${what} of ${couple} — ${w.long}${where}`;
   const url = config.siteUrl ? config.siteUrl.replace(/\/$/, '') + (variant === 'reception' ? '/reception' : '') : '';
-  const imageUrl = config.siteUrl ? config.siteUrl.replace(/\/$/, '') + '/images/preview.png' : '/images/preview.png';
+  const imagePath = variant === 'reception' ? '/images/preview-reception.png' : '/images/preview.png';
+  const imageUrl = config.siteUrl ? config.siteUrl.replace(/\/$/, '') + imagePath : imagePath;
   const tags = [
     `<title>${esc(title)}</title>`,
     `<meta name="description" content="${esc(description)}" />`,
