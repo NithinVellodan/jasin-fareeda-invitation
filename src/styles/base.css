@@ -1,0 +1,238 @@
+/* Design tokens: warm ivory parchment, emerald green & espresso ink, gold accents & foil, ivory roses */
+:root {
+  --mist-1: #fffcf8;
+  --mist-2: #f4ebe3;
+  --mist-3: #e7d6ca;
+  --paper: #fcf8f1;
+  --linen: #ede5dc;
+  --ink: #223026;
+  --ink-soft: #3e4e43;
+  --ink-mute: #5d6f63;
+  --gold-deep: #7a5b23;
+  --gold: #a8843f;
+  --gold-mid: #c9a55e;
+  --gold-light: #e6cf96;
+  --rose-deep: #144431;
+  --rose: #1c5c43;
+  --rose-mid: #2b7a59;
+  --rose-light: #52a37e;
+  --name: #144431;
+  --emerald-deep: #0c2d20;
+  --emerald-mid: #18523b;
+  --emerald-light: #257052;
+  --line: rgba(168, 132, 63, 0.55);
+  --foil: linear-gradient(100deg, #8c6a2f 0%, #c9a55e 20%, #f4e4b2 38%, #c49a4e 55%, #9c7834 74%, #ddbe78 100%);
+  --foil-rose: linear-gradient(100deg, #0e3525 0%, #17533b 22%, #c9a55e 40%, #17533b 56%, #0a291c 76%, #c9a55e 100%);
+
+  --serif: 'Cormorant Garamond', 'Cormorant', Georgia, 'Times New Roman', serif;
+  --caps: 'Cinzel', 'Cormorant Garamond', Georgia, serif;
+  --script: 'Great Vibes', 'Cormorant Garamond', cursive;
+  --arabic: 'Amiri', 'Noto Naskh Arabic', 'Geeza Pro', 'Traditional Arabic', serif;
+
+  --vh: 100vh;
+  --col: min(100vw, calc(var(--vh) * 9 / 16));
+  --card-gap: 0px;
+  --card-h: var(--vh);
+  --card-w: 100vw;
+  --card-r: 0px;
+  --u: calc(var(--card-w) / 100);
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+}
+
+@supports (height: 100svh) {
+  :root {
+    --vh: 100svh;
+  }
+}
+
+/* Wider than a phone: the invitation becomes a floating 9:16 card. */
+@media (min-aspect-ratio: 5/8) {
+  :root {
+    --card-gap: clamp(10px, 3vh, 34px);
+    --card-h: calc(var(--vh) - 2 * var(--card-gap));
+    --card-w: calc(var(--card-h) * 9 / 16);
+    --card-r: 20px;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+html {
+  background: var(--mist-2);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  position: fixed;
+  inset: 0;
+  font-family: var(--serif);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+h1,
+h2,
+p,
+ul {
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+a {
+  color: inherit;
+}
+
+svg {
+  display: block;
+}
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold-mid);
+  outline-offset: 3px;
+}
+
+.svg-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Four-point gold glint */
+.spark {
+  position: absolute;
+  width: var(--sz, 10px);
+  aspect-ratio: 1;
+  clip-path: polygon(50% 0, 58% 42%, 100% 50%, 58% 58%, 50% 100%, 42% 58%, 0 50%, 42% 42%);
+  background: radial-gradient(circle, #fffdf5 0 14%, #ffe9b4 26%, rgba(255, 233, 180, 0) 62%);
+  pointer-events: none;
+}
+
+.spark.twinkle {
+  opacity: 0;
+  animation: twinkle 4s ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+  }
+  45% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(45deg);
+  }
+  75% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3) rotate(90deg);
+  }
+}
+
+#petals {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+  pointer-events: none;
+}
+
+#tapfx {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+#fade {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  background: var(--paper);
+  opacity: 0;
+  pointer-events: none;
+}
+
+#rotate {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: none;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(120% 90% at 50% 40%, var(--mist-1), var(--mist-2));
+  font-style: italic;
+  font-weight: 500;
+  font-size: 22px;
+  color: var(--ink);
+  text-align: center;
+}
+
+@media (orientation: landscape) and (max-height: 520px) and (pointer: coarse) {
+  #rotate {
+    display: grid;
+  }
+}
+
+.noscript {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  font: 500 20px/1.6 Georgia, serif;
+  text-align: center;
+  background: var(--paper);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

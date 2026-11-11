@@ -1,0 +1,450 @@
+/* ---------- Scene 0: loader (the S+B logo draws itself) ---------- */
+#loader {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+.loader-bg,
+.fl-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(110% 80% at 50% 45%, #fffdf9 0%, #f7efe8 52%, #ebdcd1 100%);
+}
+
+.loader-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+}
+
+.loader-mono {
+  width: min(56vw, 270px, calc(var(--col) * 0.56));
+  height: auto;
+  overflow: visible;
+}
+
+.loader-mono .mg {
+  fill: url(#g-lfoil);
+  fill-opacity: 0;
+  stroke: #a8843f;
+  stroke-width: 0.6;
+  stroke-linejoin: round;
+  stroke-dasharray: var(--len);
+  stroke-dashoffset: var(--len);
+  animation:
+    mg-draw 2.2s cubic-bezier(0.55, 0.1, 0.3, 1) 0.2s forwards,
+    mg-fill 1.1s ease 1.95s forwards;
+}
+
+.loader-mono .mg-2 {
+  animation-delay: 0.55s, 2.15s;
+}
+
+#loader.quick .mg {
+  animation: none;
+  stroke-dashoffset: 0;
+  fill-opacity: 1;
+  stroke-width: 0.5;
+}
+
+@keyframes mg-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes mg-fill {
+  to {
+    fill-opacity: 1;
+    stroke-width: 0.5;
+  }
+}
+
+.loader-line {
+  width: min(34vw, 150px);
+  height: 1px;
+  background: rgba(168, 132, 63, 0.22);
+  overflow: hidden;
+}
+
+.loader-line span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(20, 68, 49, 0.3), #144431 60%, #c9a55e);
+  transform: scaleX(0.04);
+  transform-origin: 0 50%;
+  transition: transform 0.6s cubic-bezier(0.22, 0.8, 0.24, 1);
+}
+
+/* ---------- Intro container ---------- */
+#intro {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+
+.scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* ---------- Scene 1: simple flowers open around the logo ---------- */
+.scene--flowers {
+  z-index: 2;
+}
+
+.fl-ring {
+  position: absolute;
+  left: 50%;
+  /* centred on the logo, which sits half of (26px gap + 1px line) above the screen centre in the loader */
+  top: calc(50% - 13.5px);
+  width: 0;
+  height: 0;
+}
+
+.fl,
+.fl-leaf {
+  position: absolute;
+  left: calc(var(--x) * var(--col));
+  top: calc(var(--y) * var(--col));
+  translate: -50% -50%;
+}
+
+.fl {
+  width: calc(var(--s) * var(--col));
+  aspect-ratio: 1;
+}
+
+.fl-in,
+.fl-leaf-in {
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.blossom {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 0.6vmin 1vmin rgba(120, 70, 50, 0.16));
+}
+
+.bl-petal {
+  transform-box: view-box;
+  transform-origin: 0 0;
+}
+
+.bl-heart {
+  transform-box: view-box;
+  transform-origin: 0 0;
+}
+
+.fl-leaf {
+  width: calc(var(--col) * 0.05);
+  height: calc(var(--col) * 0.175);
+  rotate: var(--rot);
+}
+
+.gleaf {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* ---------- Scene 2: the gatefold invitation ---------- */
+.scene--gate {
+  z-index: 1;
+  overflow: visible;
+}
+
+.gate-zoom {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+}
+
+.gate {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--card-w);
+  height: var(--card-h);
+  margin: calc(var(--card-h) / -2) 0 0 calc(var(--card-w) / -2);
+}
+
+.gate-liner {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--card-r);
+  background: linear-gradient(180deg, #f4ece2, #e9ddcf);
+  box-shadow:
+    inset 0 0 60px rgba(96, 64, 44, 0.22),
+    0 40px 90px -40px rgba(60, 34, 26, 0.5);
+}
+
+.gate-glow {
+  position: absolute;
+  left: 50%;
+  top: 53.5%;
+  width: 130%;
+  aspect-ratio: 1;
+  margin: -65% 0 0 -65%;
+  z-index: 1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(255, 249, 238, 0.95), rgba(255, 236, 214, 0.5) 40%, rgba(255, 236, 214, 0));
+  opacity: 0;
+  pointer-events: none;
+}
+
+.gate-doors {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  perspective: calc(var(--card-w) * 2.6);
+  perspective-origin: 50% 50%;
+}
+
+.door {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  overflow: hidden;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.door--l {
+  transform-origin: 0 50%;
+  border-radius: var(--card-r) 0 0 var(--card-r);
+}
+
+.door--r {
+  transform-origin: 100% 50%;
+  border-radius: 0 var(--card-r) var(--card-r) 0;
+}
+
+.door-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.gate-ribbon {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.gate-part {
+  position: absolute;
+}
+
+.gate-part-inner {
+  position: absolute;
+  inset: 0;
+}
+
+.gate-part svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.rb-band-l {
+  transform-origin: 0 50%;
+}
+
+.rb-band-r {
+  transform-origin: 100% 50%;
+}
+
+.rb-band-l .gate-part-inner {
+  transform-origin: 100% 50%;
+}
+
+.rb-band-r .gate-part-inner {
+  transform-origin: 0 50%;
+}
+
+.rb-tail {
+  transform-origin: 50% 12%;
+}
+
+.gseal {
+  position: absolute;
+  z-index: 4;
+  opacity: 0;
+}
+
+.gseal-inner {
+  position: absolute;
+  inset: 0;
+}
+
+.gseal-svg,
+.seal-shard svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.gseal-sheen {
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0) 38%, rgba(255, 255, 255, 0.65) 50%, rgba(255, 255, 255, 0) 62%) 120% 0 / 260% 100% no-repeat;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.gseal.is-waiting .gseal-sheen {
+  animation: gseal-glint 3.6s ease-in-out 0.8s infinite;
+}
+
+@keyframes gseal-glint {
+  0% {
+    opacity: 1;
+    background-position: 120% 0;
+  }
+  28% {
+    opacity: 1;
+    background-position: -20% 0;
+  }
+  29%,
+  100% {
+    opacity: 0;
+    background-position: -20% 0;
+  }
+}
+
+.gseal.is-waiting .gseal-inner {
+  animation: gseal-breathe 2.4s ease-in-out infinite;
+}
+
+@keyframes gseal-breathe {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.035);
+  }
+}
+
+.gseal-pulse {
+  position: absolute;
+  inset: 5%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(201, 165, 94, 0.9);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.gseal.is-waiting .gseal-pulse {
+  animation: gseal-pulse 2.4s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+
+@keyframes gseal-pulse {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+.gate-hint {
+  position: absolute;
+  left: 50%;
+  z-index: 5;
+  margin: 0;
+  padding: 0.6em 1.4em 0.55em;
+  border-radius: 999px;
+  background: rgba(255, 250, 244, 0.88);
+  box-shadow:
+    inset 0 0 0 1px rgba(201, 165, 94, 0.6),
+    0 8px 20px -10px rgba(90, 50, 40, 0.45);
+  font-family: var(--caps);
+  font-size: max(11px, calc(var(--card-w) * 0.032));
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  line-height: 1;
+  white-space: nowrap;
+  text-transform: uppercase;
+  color: var(--rose-deep);
+  opacity: 0;
+  transform: translate(-50%, calc(-100% + 8px));
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s cubic-bezier(0.2, 0.8, 0.3, 1);
+  pointer-events: none;
+}
+
+.gate-hint.is-on {
+  opacity: 1;
+  transform: translate(-50%, -100%);
+}
+
+.gate-tap {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.gate-tap:focus-visible {
+  outline: none;
+}
+
+.scene--gate:has(.gate-tap:focus-visible) .gate-hint {
+  outline: 2px solid var(--gold-mid);
+  outline-offset: 3px;
+}
+
+.seal-shard {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.seal-shard--l {
+  clip-path: polygon(0 0, 52% 0, 47% 18%, 55% 33%, 45% 50%, 54% 66%, 46% 82%, 51% 100%, 0 100%);
+}
+
+.seal-shard--r {
+  clip-path: polygon(52% 0, 100% 0, 100% 100%, 51% 100%, 46% 82%, 54% 66%, 45% 50%, 55% 33%, 47% 18%);
+}
+
+.seal-crack {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.seal-crack svg {
+  width: 100%;
+  height: 100%;
+}
+
+.seal-crack polyline {
+  fill: none;
+  stroke: #fff3c9;
+  stroke-width: 1.4;
+  vector-effect: non-scaling-stroke;
+  filter: drop-shadow(0 0 4px #f6d98f);
+}

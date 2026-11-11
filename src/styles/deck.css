@@ -1,0 +1,283 @@
+/* ---------- Backdrop around the card (wide screens) ---------- */
+#backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(90% 80% at 50% 45%, #fffbf6 0%, #f2e6dc 60%, #e3d0c3 100%);
+}
+
+#backdrop::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--pattern) center / 64px repeat;
+  opacity: 0.55;
+  -webkit-mask-image: radial-gradient(75% 70% at 50% 50%, transparent 30%, #000 100%);
+  mask-image: radial-gradient(75% 70% at 50% 50%, transparent 30%, #000 100%);
+}
+
+/* ---------- Deck ---------- */
+#deck {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  perspective: calc(var(--card-w) * 3.2);
+  perspective-origin: 50% 50%;
+  touch-action: none;
+}
+
+#deck.is-dragging {
+  cursor: grabbing;
+}
+
+.page {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: var(--card-w);
+  height: var(--card-h);
+  margin: calc(var(--card-h) / -2) 0 0 calc(var(--card-w) / -2);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  visibility: hidden;
+}
+
+.page.is-current {
+  visibility: visible;
+}
+
+.shade {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--card-r);
+  background: rgb(40 22 18 / 0.88);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.shade[data-role='top'] {
+  background: linear-gradient(90deg, rgb(40 22 18 / 0.1), rgb(40 22 18 / 0.82));
+}
+
+/* ---------- Sheet: the card, dressed in the embroidered linen photo ---------- */
+.sheet {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: var(--card-r);
+  container-type: size;
+  color: var(--ink);
+  background: var(--linen);
+  box-shadow:
+    0 40px 90px -40px rgba(60, 34, 26, 0.5),
+    0 12px 30px -16px rgba(60, 34, 26, 0.3);
+}
+
+.sheet-bg {
+  position: absolute;
+  inset: -3%;
+  background: url('/images/bg-floral.webp') center / cover no-repeat;
+  transform-origin: 50% 45%;
+}
+
+.page.is-current .sheet-bg {
+  animation: kenburns 26s ease-in-out infinite alternate;
+}
+
+@keyframes kenburns {
+  from {
+    transform: scale(1) translate(0, 0);
+  }
+  to {
+    transform: scale(1.055) translate(-0.6%, -0.8%);
+  }
+}
+
+.bg-sparkles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* content waits for its page to be revealed */
+.page:not(.is-revealed) [data-r],
+.page:not(.is-revealed) [data-w] {
+  opacity: 0;
+}
+
+/* ---------- Navigation ---------- */
+.deck-nav {
+  position: fixed;
+  z-index: 20;
+  left: 50%;
+  bottom: calc(var(--card-gap) + max(var(--u) * 4.4, var(--safe-b) + 10px));
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 3.4);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.8s ease,
+    visibility 0.8s;
+}
+
+.deck-nav.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.nav-btn {
+  width: max(40px, calc(var(--u) * 10));
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--rose-deep);
+  background: rgba(255, 252, 248, 0.88);
+  border: 1px solid rgba(176, 116, 104, 0.55);
+  box-shadow: 0 6px 18px -8px rgba(80, 40, 30, 0.35);
+  transition:
+    transform 0.25s ease,
+    opacity 0.4s ease;
+}
+
+.nav-btn svg {
+  width: 46%;
+  height: 46%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.nav-prev svg {
+  transform: scaleX(-1);
+}
+
+.nav-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.nav-btn:not(:disabled):active {
+  transform: scale(0.93);
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 1.9);
+}
+
+.dot {
+  position: relative;
+  width: max(7px, calc(var(--u) * 1.9));
+  height: max(7px, calc(var(--u) * 1.9));
+  border-radius: 99px;
+  border: 1px solid var(--rose);
+  background: rgba(255, 252, 248, 0.6);
+  transition:
+    width 0.6s cubic-bezier(0.22, 0.8, 0.24, 1),
+    background-color 0.6s ease;
+}
+
+.dot::before {
+  content: '';
+  position: absolute;
+  inset: -12px -6px;
+}
+
+.dot[aria-current='true'] {
+  width: max(22px, calc(var(--u) * 5.6));
+  background: linear-gradient(90deg, var(--rose), var(--gold-mid));
+}
+
+/* ---------- Music ---------- */
+#music {
+  position: fixed;
+  z-index: 30;
+  top: calc(var(--card-gap) + max(var(--u) * 6, var(--safe-t) + 12px));
+  right: calc((100vw - var(--card-w)) / 2 + var(--u) * 6);
+  width: max(40px, calc(var(--u) * 10.5));
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 252, 248, 0.88);
+  border: 1px solid rgba(176, 116, 104, 0.6);
+  box-shadow: 0 6px 18px -8px rgba(80, 40, 30, 0.35);
+  opacity: 0;
+  transition:
+    opacity 0.8s ease,
+    transform 0.2s ease;
+}
+
+#music[hidden] {
+  display: none;
+}
+
+#music.is-visible {
+  opacity: 1;
+}
+
+#music:active {
+  transform: scale(0.94);
+}
+
+.eq {
+  display: flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  height: 14px;
+}
+
+.eq i {
+  display: block;
+  width: 2px;
+  height: 100%;
+  border-radius: 1px;
+  background: var(--rose);
+  transform: scaleY(0.25);
+  transform-origin: 50% 100%;
+}
+
+#music.is-playing .eq i {
+  animation: eq 1s ease-in-out infinite;
+}
+
+#music.is-playing .eq i:nth-child(2) {
+  animation-duration: 0.8s;
+  animation-delay: -0.3s;
+}
+
+#music.is-playing .eq i:nth-child(3) {
+  animation-duration: 1.15s;
+  animation-delay: -0.6s;
+}
+
+#music.is-playing .eq i:nth-child(4) {
+  animation-duration: 0.9s;
+  animation-delay: -0.15s;
+}
+
+#music:not(.is-playing)::after {
+  content: '';
+  position: absolute;
+  width: 22px;
+  height: 1px;
+  background: var(--rose);
+  transform: rotate(-45deg);
+}
+
+@keyframes eq {
+  0%,
+  100% {
+    transform: scaleY(0.25);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
